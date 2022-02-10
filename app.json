@@ -1,32 +1,40 @@
 {
-  "expo": {
-    "name": "bike-GPS-mobile",
-    "slug": "bike-GPS-mobile",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
-  }
+	"expo": {
+		"name": "bike-GPS-mobile",
+		"slug": "bike-GPS-mobile",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"infoPlist": {
+				"Permissions.LOCATION": true,
+				"ITSAppUsesNonExemptEncryption": false,
+				"UIBackgroundModes": ["location", "fetch"],
+				"CFBundleAllowMixedLocalizations": true,
+				"NSLocationAlwaysAndWhenInUseUsageDescription": "App requires geolocation to improve the quality of the service",
+				"NSLocationAlwaysUsageDescription": "App requires geolocation to improve the quality of the service",
+				"NSLocationWhenInUseUsageDescription": "App requires geolocation to improve the quality of the service",
+				"NSCameraUsageDescription": "The picture will be used to inform the state of the packages during delivery"
+			},
+			"supportsTablet": true
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#FFFFFF"
+			}
+		},
+		"web": {
+			"favicon": "./assets/favicon.png"
+		}
+	}
 }
