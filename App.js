@@ -11,7 +11,7 @@ import React, { useState, useEffect } from 'react';
 import * as Location from 'expo-location';
 
 export default function App() {
-	const url = 'http://192.168.1.224:5000/api/v1/rides';
+	const url = '192.168.1.224:5000/api/v1/rides';
 	const [msg, setMsg] = useState('Waiting for location permissions...');
 	const [location, setLocation] = useState(null);
 	const [isRecording, setIsRecording] = useState(false);
@@ -35,9 +35,9 @@ export default function App() {
 	}, [isRecording]);
 
 	const [recordedRide, setRecordedRide] = useState([]);
-	let rideArray = [];
 
 	useEffect(() => {
+		let rideArray = [];
 		if (isRecording) {
 			const timer = setInterval(() => {
 				async function recordLoc() {
@@ -62,14 +62,15 @@ export default function App() {
 			return () => {
 				setIsRecording(false);
 				clearInterval(timer);
+				setRecordedRide(rideArray);
 			};
 		}
 	}, [isRecording]);
-
-	console.log({ recordedRide });
 	async function fetchRides() {
 		try {
-			const res = await fetch(url);
+			const res = await fetch(
+				`https://bike-gps.herokuapp.com/api/v1/rides`
+			);
 			const json = await res.json();
 
 			console.log(json);
@@ -80,6 +81,32 @@ export default function App() {
 		}
 	}
 
+	async function postRide(ride = []) {
+		const payLoad = {
+			name: 'Test Ride at the bar',
+			userId: 1,
+			coordinates: ride,
+		};
+
+		try {
+			const res = await fetch(
+				'https://bike-gps.herokuapp.com/api/v1/rides',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(payLoad),
+				}
+			);
+			const json = await res.json();
+			alert('ride posted!');
+			console.log(json);
+		} catch (error) {
+			console.log(error);
+			alert(error);
+		}
+	}
 	return (
 		<>
 			{/* <View style={styles.title}>
@@ -93,6 +120,7 @@ export default function App() {
 							<TouchableOpacity
 								style={styles.button}
 								onPress={() => {
+									postRide(recordedRide);
 									setIsRecording(false);
 								}}
 							>
