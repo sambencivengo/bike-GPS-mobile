@@ -31,23 +31,32 @@ export default function App() {
 			setMsg('Location Permissions Granted');
 			setIsPermissionGranted(true);
 		}
-
 		autoLocate();
-	}, []);
+	}, [isRecording]);
 
+	const [recordedRide, setRecordedRide] = useState([]);
 	let rideArray = [];
-
-	const [ride, setRide] = useState([]);
 
 	useEffect(() => {
 		if (isRecording) {
 			const timer = setInterval(() => {
-				rideArray.push(location);
-				let obj = {
-					lat: location.coords.latitude,
-					lng: location.coords.longitude,
-				};
-				console.log(obj);
+				async function recordLoc() {
+					let locObj = await Location.watchPositionAsync(
+						{},
+						(position) => {
+							let lat = position.coords.latitude;
+							let lng = position.coords.longitude;
+							let location = {
+								lat: lat,
+								lng: lng,
+							};
+							rideArray.push(location);
+						}
+					);
+					setRecordedRide(rideArray);
+				}
+
+				recordLoc();
 				console.log(`# of coordinates recorded: ${rideArray.length}`);
 			}, 500);
 			return () => {
@@ -57,6 +66,7 @@ export default function App() {
 		}
 	}, [isRecording]);
 
+	console.log({ recordedRide });
 	async function fetchRides() {
 		try {
 			const res = await fetch(url);
